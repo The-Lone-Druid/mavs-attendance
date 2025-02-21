@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// prisma/schema.prisma
+model User {
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  phone          String?
+  address        String?
+  role           Roles           @default(Employee)
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  departmentId   Int?
+  profilePicture String?
+  password       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  attendance     Attendance[]
+  invitations    Invitation[]
+  Role           Role?           @relation(fields: [roleId], references: [id])
+  roleId         Int?
+  passwordResets PasswordReset[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Attendance {
+  id           Int       @id @default(autoincrement())
+  user         User      @relation(fields: [userId], references: [id])
+  userId       Int
+  checkInTime  DateTime
+  checkOutTime DateTime?
+  selfie       String
+  location     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Invitation {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model Settings {
+  id            Int      @id @default(autoincrement())
+  checkInStart  String
+  checkInEnd    String
+  checkOutStart String
+  checkOutEnd   String
+  gracePeriod   Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+}
+
+enum Roles {
+  Admin
+  Manager
+  Employee
+}
