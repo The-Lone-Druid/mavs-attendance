@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { useCamera } from "@/hooks/use-camera";
+import { validateCheckInTime, validateCheckOutTime } from "@/lib/attendance";
 import { toast } from "sonner";
 import { Attendance, Settings } from "@prisma/client";
 
@@ -23,6 +24,26 @@ export function CheckInOutButton({
   const handleCheckInOut = async () => {
     try {
       setLoading(true);
+
+      // Validate time window
+      if (settings) {
+        const isCheckIn = !currentAttendance || currentAttendance.checkOutTime;
+        const validation = isCheckIn
+          ? validateCheckInTime(new Date(), settings)
+          : validateCheckOutTime(new Date(), settings);
+
+        if (!validation.isValid) {
+          toast.error("Invalid time", {
+            description: validation.message,
+          });
+          return;
+        }
+
+        if (validation.message) {
+          const toastType = validation.status === "VERY_LATE" ? "error" : "warning";
+          toast[toastType](validation.message);
+        }
+      }
 
       // Get location
       let location;

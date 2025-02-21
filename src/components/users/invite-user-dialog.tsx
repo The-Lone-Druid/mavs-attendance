@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Roles } from "@prisma/client";
 import { toast } from "sonner";
+import { CreateDepartmentForm } from "@/components/departments/create-department-form";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -49,6 +50,8 @@ interface InviteUserDialogProps {
 
 export function InviteUserDialog({ departments }: InviteUserDialogProps) {
   const [open, setOpen] = useState(false);
+  const [showCreateDepartment, setShowCreateDepartment] = useState(false);
+  const [departmentsList, setDepartmentsList] = useState(departments);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -139,23 +142,40 @@ export function InviteUserDialog({ departments }: InviteUserDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Department</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id.toString()}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {showCreateDepartment ? (
+                    <CreateDepartmentForm
+                      onSuccess={(newDepartment) => {
+                        setDepartmentsList([...departmentsList, newDepartment]);
+                        field.onChange(newDepartment.id.toString());
+                        setShowCreateDepartment(false);
+                      }}
+                      onCancel={() => setShowCreateDepartment(false)}
+                    />
+                  ) : (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value=" ">No Department</SelectItem>
+                        {departmentsList.map((dept) => (
+                          <SelectItem key={dept.id} value={dept.id.toString()}>
+                            {dept.name}
+                          </SelectItem>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="w-full justify-start px-2 py-1.5 text-sm font-normal"
+                          onClick={() => setShowCreateDepartment(true)}
+                        >
+                          + Create New Department
+                        </Button>
+                      </SelectContent>
+                    </Select>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -168,4 +188,4 @@ export function InviteUserDialog({ departments }: InviteUserDialogProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

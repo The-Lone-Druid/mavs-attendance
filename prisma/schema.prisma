@@ -56,6 +56,8 @@ model Attendance {
   checkOutTime DateTime?
   selfie       String
   location     String
+  status       String    @default("ON_TIME") // ON_TIME, LATE, VERY_LATE, LEFT_EARLY
+  minutesLate  Int?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }

@@ -3,20 +3,10 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  try {
-    const departments = await prisma.department.findMany({
-      include: {
-        _count: { select: { users: true } },
-      },
-    });
-    return NextResponse.json(departments);
-  } catch (error) {
-    return new NextResponse("Internal error", { status: 500 });
-  }
-}
-
-export async function POST(req: Request) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -25,17 +15,22 @@ export async function POST(req: Request) {
     }
 
     const { name } = await req.json();
+    const id = parseInt(params.id);
 
     // Check for duplicate name
     const existing = await prisma.department.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+        NOT: { id },
+      },
     });
 
     if (existing) {
       return new NextResponse("Department already exists", { status: 400 });
     }
 
-    const department = await prisma.department.create({
+    const department = await prisma.department.update({
+      where: { id },
       data: { name },
     });
 
@@ -45,7 +40,10 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PUT(req: Request) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -53,17 +51,14 @@ export async function PUT(req: Request) {
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
-    const body = await req.json();
-    const { id, name } = body;
+    const id = parseInt(params.id);
 
-    const department = await prisma.department.update({
+    await prisma.department.delete({
       where: { id },
-      data: { name },
     });
 
-    return NextResponse.json(department);
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error("[DEPARTMENTS_PUT]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 } 

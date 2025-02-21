@@ -1,7 +1,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { SignOutButton } from "@/components/auth/sign-out-button";
+import { DashboardStats } from "@/components/dashboard/dashboard-stats";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { DepartmentStats } from "@/components/dashboard/department-stats";
+import { PageHeader } from "@/components/layout/page-header";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -11,34 +14,17 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="text-muted-foreground">
-              Welcome back, {session.user?.name}
-            </p>
-          </div>
-          <SignOutButton />
-        </div>
+    <div className="p-4 md:p-8">
+      <PageHeader
+        title="Dashboard"
+        description={`Welcome back, ${session.user?.name}`}
+      />
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {/* Add your dashboard cards/content here */}
-          <div className="rounded-lg border p-4">
-            <h2 className="font-semibold">Today's Attendance</h2>
-            {/* Add attendance stats */}
-          </div>
-
-          <div className="rounded-lg border p-4">
-            <h2 className="font-semibold">Quick Actions</h2>
-            {/* Add quick action buttons */}
-          </div>
-
-          <div className="rounded-lg border p-4">
-            <h2 className="font-semibold">Recent Activity</h2>
-            {/* Add activity list */}
-          </div>
+      <div className="mt-8 space-y-8">
+        <DashboardStats />
+        <div className="grid gap-4 md:grid-cols-2">
+          <RecentActivity />
+          <DepartmentStats />
         </div>
       </div>
     </div>

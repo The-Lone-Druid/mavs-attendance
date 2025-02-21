@@ -14,62 +14,109 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2, CheckCircle2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
 export function ResetPasswordRequestForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setIsLoading(true);
+      setLoading(true);
+      setError(null);
+
       const response = await fetch("/api/auth/reset-password/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
-      if (!response.ok) throw new Error("Failed to send reset email");
+      if (!response.ok) {
+        throw new Error("Failed to send reset link");
+      }
 
-      toast.success("Reset link sent", {
-        description: "Check your email for the password reset link",
-      });
+      setSuccess(true);
     } catch (error) {
-      toast.error("Error", {
-        description: "Failed to send reset email. Please try again.",
-      });
+      setError("Failed to send reset link. Please try again.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
+  };
+
+  if (success) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <CheckCircle2 className="h-12 w-12 text-green-500" />
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium">Check your email</h3>
+              <p className="text-sm text-muted-foreground">
+                We've sent you a link to reset your password. The link will
+                expire in 24 hours.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="name@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Sending..." : "Send Reset Link"}
-        </Button>
-      </form>
-    </Form>
+    <Card>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your email"
+                      type="email"
+                      autoComplete="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="w-full py-6 text-base"
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              Send Reset Link
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

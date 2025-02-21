@@ -19,10 +19,8 @@ export default async function DashboardLayout({
 
   const isAdmin = session.user.role === "Admin";
 
-  console.log(adminNavItems);
-
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <MenuLayout isAdmin={isAdmin}>{children}</MenuLayout>
     </div>
   );

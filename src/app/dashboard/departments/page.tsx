@@ -2,17 +2,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { format } from "date-fns";
-import { AddDepartmentDialog } from "@/components/departments/add-department-dialog";
+import { DepartmentList } from "@/components/departments/department-list";
+import { CreateDepartmentDialog } from "@/components/departments/create-department-dialog";
+import { PageHeader } from "@/components/layout/page-header";
 
 export default async function DepartmentsPage() {
   const session = await getServerSession(authOptions);
@@ -26,42 +18,29 @@ export default async function DepartmentsPage() {
       _count: {
         select: { users: true },
       },
+      users: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          profilePicture: true,
+        },
+      },
+    },
+    orderBy: {
+      name: "asc",
     },
   });
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Departments</h1>
-        <AddDepartmentDialog />
-      </div>
-
+    <div className="p-4 md:p-8">
+      <PageHeader title="Departments">
+        <CreateDepartmentDialog />
+      </PageHeader>
       <div className="mt-8">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Employees</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {departments.map((dept) => (
-              <TableRow key={dept.id}>
-                <TableCell>{dept.name}</TableCell>
-                <TableCell>{dept._count.users}</TableCell>
-                <TableCell>{format(dept.createdAt, "MMM d, yyyy")}</TableCell>
-                <TableCell>
-                  <Button variant="outline" size="sm">
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DepartmentList departments={departments} />
       </div>
     </div>
   );
-} 
+}

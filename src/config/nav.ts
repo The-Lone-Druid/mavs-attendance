@@ -6,6 +6,7 @@ import {
   Settings,
   ClipboardList,
   LayoutDashboard,
+  User,
 } from "lucide-react";
 import { type AdminNavItem } from "@/types/nav";
 
@@ -27,7 +28,7 @@ export const adminNavItems: AdminNavItem[] = [
   },
   {
     title: "Attendance",
-    href: "/dashboard/attendance",
+    href: "/dashboard/attendance/history",
     icon: ClipboardList,
   },
   {
@@ -35,4 +36,9 @@ export const adminNavItems: AdminNavItem[] = [
     href: "/dashboard/settings",
     icon: Settings,
   },
-]; 
+  {
+    title: "Profile",
+    href: "/dashboard/profile",
+    icon: User,
+  },
+];
