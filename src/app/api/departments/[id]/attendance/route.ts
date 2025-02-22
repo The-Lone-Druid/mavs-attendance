@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -16,7 +16,7 @@ export async function GET(
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const month = searchParams.get("month");
     const id = parseInt(resolvedParams.id);
 
