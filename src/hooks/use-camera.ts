@@ -11,7 +11,7 @@ export function useCamera() {
       canvas.height = video.videoHeight;
       canvas.getContext("2d")?.drawImage(video, 0, 0);
 
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
 
       return canvas.toDataURL("image/jpeg");
     } catch (error) {
@@ -21,4 +21,4 @@ export function useCamera() {
   };
 
   return { takeSelfie };
-} 
+}

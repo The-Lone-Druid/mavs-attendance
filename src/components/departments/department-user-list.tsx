@@ -24,7 +24,9 @@ export function DepartmentUserList({ department }: DepartmentUserListProps) {
             </Avatar>
             <div>
               <p className="line-clamp-1 text-sm font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground hidden sm:block">{user.email}</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">
+                {user.email}
+              </p>
             </div>
           </div>
           <div className="text-xs font-medium">

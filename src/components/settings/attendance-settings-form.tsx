@@ -1,8 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,9 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const formSchema = z.object({
   checkInStart: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
@@ -62,6 +62,7 @@ export function AttendanceSettingsForm({
 
       toast.success("Settings saved successfully");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to save settings");
     }
   };

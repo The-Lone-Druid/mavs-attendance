@@ -14,7 +14,6 @@ export function PaginationButton({
   currentPage,
   totalPages,
   baseUrl,
-  preserveParams = [],
 }: PaginationButtonProps) {
   const router = useRouter();
 
@@ -42,4 +41,4 @@ export function PaginationButton({
       </Button>
     </div>
   );
-} 
+}

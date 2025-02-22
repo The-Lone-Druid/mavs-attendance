@@ -23,8 +23,11 @@ export function CreateDepartmentDialog() {
         <DialogHeader>
           <DialogTitle>Create Department</DialogTitle>
         </DialogHeader>
-        <CreateDepartmentForm onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} />
+        <CreateDepartmentForm
+          onSuccess={() => setOpen(false)}
+          onCancel={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
-} 
+}

@@ -40,4 +40,4 @@ export async function PUT(req: Request) {
     console.error("[SETTINGS_PUT]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

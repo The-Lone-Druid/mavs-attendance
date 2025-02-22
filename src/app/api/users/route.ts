@@ -60,4 +60,4 @@ export async function PUT(req: Request) {
     console.error("[USERS_PUT]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

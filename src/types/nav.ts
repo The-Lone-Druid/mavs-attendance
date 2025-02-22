@@ -4,4 +4,4 @@ export interface AdminNavItem {
   title: string;
   href: string;
   icon: LucideIcon;
-} 
+}

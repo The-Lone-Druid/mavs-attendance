@@ -1,6 +1,6 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -20,7 +20,7 @@ export async function PATCH(
     // Check for duplicate name
     const existing = await prisma.department.findFirst({
       where: {
-        name: { equals: name, mode: 'insensitive' },
+        name: { equals: name, mode: "insensitive" },
         NOT: { id },
       },
     });
@@ -36,6 +36,7 @@ export async function PATCH(
 
     return NextResponse.json(department);
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
@@ -59,6 +60,7 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

@@ -1,9 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,8 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Department, User } from "@prisma/client";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { User, Department } from "@prisma/client";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -54,6 +54,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
       toast.success("Profile updated successfully");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to update profile");
     } finally {
       setLoading(false);
@@ -121,4 +122,4 @@ export function ProfileForm({ user }: ProfileFormProps) {
       </form>
     </Form>
   );
-} 
+}

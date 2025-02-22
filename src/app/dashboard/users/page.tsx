@@ -1,8 +1,3 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,9 +6,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import { InviteUserDialog } from "@/components/users/invite-user-dialog";
 import { EditUserDialog } from "@/components/users/edit-user-dialog";
+import { InviteUserDialog } from "@/components/users/invite-user-dialog";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { format } from "date-fns";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default async function UsersPage() {
   const session = await getServerSession(authOptions);
@@ -57,9 +56,7 @@ export default async function UsersPage() {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.department?.name || "-"}</TableCell>
-                <TableCell>
-                  {format(user.createdAt, "MMM d, yyyy")}
-                </TableCell>
+                <TableCell>{format(user.createdAt, "MMM d, yyyy")}</TableCell>
                 <TableCell>
                   <EditUserDialog user={user} departments={departments} />
                 </TableCell>
@@ -70,4 +67,4 @@ export default async function UsersPage() {
       </div>
     </div>
   );
-} 
+}

@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { endOfMonth, startOfMonth } from "date-fns";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { startOfMonth, endOfMonth } from "date-fns";
 
 export async function GET() {
   try {
@@ -35,7 +35,7 @@ export async function GET() {
     });
 
     // Calculate statistics for each department
-    const stats = departments.map(dept => {
+    const stats = departments.map((dept) => {
       const totalMembers = dept.users.length;
       const totalAttendance = dept.users.reduce(
         (sum, user) => sum + user.attendance.length,
@@ -43,15 +43,14 @@ export async function GET() {
       );
       const onTimeCount = dept.users.reduce(
         (sum, user) =>
-          sum +
-          user.attendance.filter(a => a.status === "ON_TIME").length,
+          sum + user.attendance.filter((a) => a.status === "ON_TIME").length,
         0
       );
       const lateCount = dept.users.reduce(
         (sum, user) =>
           sum +
           user.attendance.filter(
-            a => a.status === "LATE" || a.status === "VERY_LATE"
+            (a) => a.status === "LATE" || a.status === "VERY_LATE"
           ).length,
         0
       );
@@ -73,6 +72,7 @@ export async function GET() {
 
     return NextResponse.json(stats);
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

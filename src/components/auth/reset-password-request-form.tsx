@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -14,9 +12,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -51,6 +51,7 @@ export function ResetPasswordRequestForm() {
 
       setSuccess(true);
     } catch (error) {
+      console.error(error);
       setError("Failed to send reset link. Please try again.");
     } finally {
       setLoading(false);
@@ -66,7 +67,7 @@ export function ResetPasswordRequestForm() {
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Check your email</h3>
               <p className="text-sm text-muted-foreground">
-                We've sent you a link to reset your password. The link will
+                We&apos;ve sent you a link to reset your password. The link will
                 expire in 24 hours.
               </p>
             </div>

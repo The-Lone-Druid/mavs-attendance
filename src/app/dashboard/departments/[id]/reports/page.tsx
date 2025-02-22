@@ -38,13 +38,10 @@ export default async function DepartmentReportsPage({ params }: PageProps) {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHeader
-        title={department.name}
-        description="Attendance Reports"
-      />
+      <PageHeader title={department.name} description="Attendance Reports" />
       <div className="mt-8">
         <DepartmentAttendanceReport department={department} />
       </div>
     </div>
   );
-} 
+}

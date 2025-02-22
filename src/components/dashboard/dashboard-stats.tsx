@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { CheckCircle, Clock, AlertCircle, LogOut } from "lucide-react";
+import { AlertCircle, CheckCircle, Clock, LogOut } from "lucide-react";
 
 export function DashboardStats() {
   const { data: stats, isLoading } = useQuery({
@@ -95,4 +89,4 @@ export function DashboardStats() {
       </Card>
     </div>
   );
-} 
+}

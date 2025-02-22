@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -17,9 +16,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+type DepartmentStat = {
+  id: string;
+  name: string;
+  totalMembers: number;
+  onTimePercentage: number;
+  latePercentage: number;
+  absentPercentage: number;
+};
 
 export function DepartmentStats() {
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats, isLoading } = useQuery<DepartmentStat[]>({
     queryKey: ["departmentStats"],
     queryFn: async () => {
       const response = await fetch("/api/dashboard/departments");
@@ -53,7 +61,7 @@ export function DepartmentStats() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {stats?.map((dept: any) => (
+              {stats?.map((dept) => (
                 <TableRow key={dept.id}>
                   <TableCell className="font-medium">{dept.name}</TableCell>
                   <TableCell>{dept.totalMembers}</TableCell>
@@ -74,4 +82,4 @@ export function DepartmentStats() {
       </CardContent>
     </Card>
   );
-} 
+}

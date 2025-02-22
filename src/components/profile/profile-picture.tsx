@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { User } from "@prisma/client";
 import { Upload } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface ProfilePictureProps {
   user: User;
@@ -45,6 +45,7 @@ export function ProfilePicture({ user }: ProfilePictureProps) {
       // Refresh the page to show new image
       window.location.reload();
     } catch (error) {
+      console.error(error);
       toast.error("Failed to upload profile picture");
     } finally {
       setLoading(false);
@@ -86,4 +87,4 @@ export function ProfilePicture({ user }: ProfilePictureProps) {
       </div>
     </div>
   );
-} 
+}

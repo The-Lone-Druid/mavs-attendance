@@ -1,5 +1,11 @@
 import { Settings } from "@prisma/client";
-import { parse, isWithinInterval, addMinutes, set, differenceInMinutes } from "date-fns";
+import {
+  parse,
+  isWithinInterval,
+  addMinutes,
+  set,
+  differenceInMinutes,
+} from "date-fns";
 
 export type AttendanceStatus = "ON_TIME" | "LATE" | "VERY_LATE" | "LEFT_EARLY";
 
@@ -10,7 +16,10 @@ interface TimeValidationResult {
   minutesLate?: number;
 }
 
-export function validateCheckInTime(currentTime: Date, settings: Settings): TimeValidationResult {
+export function validateCheckInTime(
+  currentTime: Date,
+  settings: Settings
+): TimeValidationResult {
   const today = new Date();
   const checkInStart = parse(settings.checkInStart, "HH:mm", today);
   const checkInEnd = parse(settings.checkInEnd, "HH:mm", today);
@@ -62,7 +71,10 @@ export function validateCheckInTime(currentTime: Date, settings: Settings): Time
   };
 }
 
-export function validateCheckOutTime(currentTime: Date, settings: Settings): TimeValidationResult {
+export function validateCheckOutTime(
+  currentTime: Date,
+  settings: Settings
+): TimeValidationResult {
   const today = new Date();
   const checkOutStart = parse(settings.checkOutStart, "HH:mm", today);
   const checkOutEnd = parse(settings.checkOutEnd, "HH:mm", today);
@@ -98,4 +110,4 @@ export function validateCheckOutTime(currentTime: Date, settings: Settings): Tim
     isValid: true,
     status: "ON_TIME",
   };
-} 
+}

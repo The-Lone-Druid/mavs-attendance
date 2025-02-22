@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { endOfMonth, startOfMonth } from "date-fns";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { startOfMonth, endOfMonth } from "date-fns";
 
 export async function GET() {
   try {
@@ -29,14 +29,15 @@ export async function GET() {
     // Calculate statistics
     const stats = {
       total: attendance.length,
-      onTime: attendance.filter(a => a.status === "ON_TIME").length,
-      late: attendance.filter(a => a.status === "LATE").length,
-      veryLate: attendance.filter(a => a.status === "VERY_LATE").length,
-      leftEarly: attendance.filter(a => a.status === "LEFT_EARLY").length,
+      onTime: attendance.filter((a) => a.status === "ON_TIME").length,
+      late: attendance.filter((a) => a.status === "LATE").length,
+      veryLate: attendance.filter((a) => a.status === "VERY_LATE").length,
+      leftEarly: attendance.filter((a) => a.status === "LEFT_EARLY").length,
     };
 
     return NextResponse.json(stats);
   } catch (error) {
+    console.error("[DASHBOARD_STATS]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

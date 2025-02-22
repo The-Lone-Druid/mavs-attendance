@@ -19,7 +19,9 @@ interface EditDepartmentDialogProps {
   };
 }
 
-export function EditDepartmentDialog({ department }: EditDepartmentDialogProps) {
+export function EditDepartmentDialog({
+  department,
+}: EditDepartmentDialogProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,8 +35,11 @@ export function EditDepartmentDialog({ department }: EditDepartmentDialogProps) 
         <DialogHeader>
           <DialogTitle>Edit Department</DialogTitle>
         </DialogHeader>
-        <EditDepartmentForm department={department} onSuccess={() => setOpen(false)} />
+        <EditDepartmentForm
+          department={department}
+          onSuccess={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
-} 
+}

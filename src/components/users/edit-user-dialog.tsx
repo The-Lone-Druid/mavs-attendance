@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -20,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -27,10 +25,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Department, Roles, User } from "@prisma/client";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Roles, User, Department } from "@prisma/client";
+import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -47,7 +47,11 @@ interface EditUserDialogProps {
   trigger?: React.ReactNode;
 }
 
-export function EditUserDialog({ user, departments, trigger }: EditUserDialogProps) {
+export function EditUserDialog({
+  user,
+  departments,
+  trigger,
+}: EditUserDialogProps) {
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -75,6 +79,7 @@ export function EditUserDialog({ user, departments, trigger }: EditUserDialogPro
       toast.success("User updated successfully");
       setOpen(false);
     } catch (error) {
+      console.error(error);
       toast.error("Failed to update user");
     }
   };
@@ -151,7 +156,10 @@ export function EditUserDialog({ user, departments, trigger }: EditUserDialogPro
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select role" />
@@ -204,4 +212,4 @@ export function EditUserDialog({ user, departments, trigger }: EditUserDialogPro
       </DialogContent>
     </Dialog>
   );
-} 
+}

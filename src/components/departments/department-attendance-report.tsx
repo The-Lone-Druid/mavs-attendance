@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Department, User } from "@prisma/client";
-import { format } from "date-fns";
+import { AttendanceStatusBadge } from "@/components/attendance/attendance-status-badge";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -19,33 +19,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AttendanceStatusBadge } from "@/components/attendance/attendance-status-badge";
-import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Download, Loader2 } from "lucide-react";
 import { exportToExcel, formatAttendanceForExport } from "@/lib/export";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Attendance, Department, User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { Download, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 interface DepartmentAttendanceReportProps {
   department: Department & {
     users: Pick<User, "id" | "name" | "email">[];
   };
 }
-
-interface AttendanceStats {
+type AttendanceStats = {
   total: number;
   onTime: number;
   late: number;
   veryLate: number;
   leftEarly: number;
-}
+};
 
 export function DepartmentAttendanceReport({
   department,
 }: DepartmentAttendanceReportProps) {
   const [date, setDate] = useState<Date>(new Date());
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<{
+    attendance: (Attendance & { user: User })[];
+    stats: AttendanceStats;
+  }>({
     queryKey: ["departmentAttendance", department.id, format(date, "yyyy-MM")],
     queryFn: async () => {
       const response = await fetch(
@@ -62,6 +64,7 @@ export function DepartmentAttendanceReport({
   const handleExport = () => {
     if (!data?.attendance) return;
     const formattedData = formatAttendanceForExport(data.attendance);
+
     exportToExcel(
       formattedData,
       `${department.name}-attendance-${format(date, "MMM-yyyy")}`
@@ -188,25 +191,30 @@ export function DepartmentAttendanceReport({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {data?.attendance.map((record: any) => (
-                      <TableRow key={record.id}>
-                        <TableCell>{record.user.name}</TableCell>
-                        <TableCell>
-                          {format(new Date(record.checkInTime), "MMM d, yyyy")}
-                        </TableCell>
-                        <TableCell>
-                          {format(new Date(record.checkInTime), "hh:mm a")}
-                        </TableCell>
-                        <TableCell>
-                          {record.checkOutTime
-                            ? format(new Date(record.checkOutTime), "hh:mm a")
-                            : "-"}
-                        </TableCell>
-                        <TableCell>
-                          <AttendanceStatusBadge status={record.status} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {data?.attendance.map(
+                      (record: Attendance & { user: User }) => (
+                        <TableRow key={record.id}>
+                          <TableCell>{record.user.name}</TableCell>
+                          <TableCell>
+                            {format(
+                              new Date(record.checkInTime),
+                              "MMM d, yyyy"
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {format(new Date(record.checkInTime), "hh:mm a")}
+                          </TableCell>
+                          <TableCell>
+                            {record.checkOutTime
+                              ? format(new Date(record.checkOutTime), "hh:mm a")
+                              : "-"}
+                          </TableCell>
+                          <TableCell>
+                            <AttendanceStatusBadge status={record.status} />
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               )}

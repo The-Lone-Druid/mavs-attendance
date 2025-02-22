@@ -1,5 +1,7 @@
 "use client";
 
+import { AttendanceStatusBadge } from "@/components/attendance/attendance-status-badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -7,14 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Attendance, User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { AttendanceStatusBadge } from "@/components/attendance/attendance-status-badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function RecentActivity() {
-  const { data: activities, isLoading } = useQuery({
+  const { data: activities, isLoading } = useQuery<
+    (Attendance & { user: User })[]
+  >({
     queryKey: ["recentActivity"],
     queryFn: async () => {
       const response = await fetch("/api/dashboard/activity");
@@ -38,7 +41,7 @@ export function RecentActivity() {
           </div>
         ) : (
           <div className="space-y-4">
-            {activities?.map((activity: any) => (
+            {activities?.map((activity) => (
               <div
                 key={activity.id}
                 className="flex items-center justify-between"
@@ -66,4 +69,4 @@ export function RecentActivity() {
       </CardContent>
     </Card>
   );
-} 
+}

@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { endOfDay, endOfMonth, startOfDay, startOfMonth } from "date-fns";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns";
 
 export async function GET(
   req: Request,
@@ -61,6 +61,7 @@ export async function GET(
 
     return NextResponse.json({ attendance, stats });
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

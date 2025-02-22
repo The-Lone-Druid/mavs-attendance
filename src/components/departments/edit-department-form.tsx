@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Department } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Department } from "@prisma/client";
+import { useState } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -16,7 +16,10 @@ interface EditDepartmentFormProps {
   onSuccess: () => void;
 }
 
-export function EditDepartmentForm({ department, onSuccess }: EditDepartmentFormProps) {
+export function EditDepartmentForm({
+  department,
+  onSuccess,
+}: EditDepartmentFormProps) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState(department.name);
   const [error, setError] = useState("");
@@ -45,6 +48,7 @@ export function EditDepartmentForm({ department, onSuccess }: EditDepartmentForm
       toast.success("Department updated successfully");
       onSuccess();
     } catch (error) {
+      console.error(error);
       toast.error("Failed to update department");
     } finally {
       setLoading(false);
@@ -72,4 +76,4 @@ export function EditDepartmentForm({ department, onSuccess }: EditDepartmentForm
       </div>
     </div>
   );
-} 
+}

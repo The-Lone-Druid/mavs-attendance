@@ -16,4 +16,4 @@ export function VisuallyHidden({ children, className }: VisuallyHiddenProps) {
       {children}
     </span>
   );
-} 
+}

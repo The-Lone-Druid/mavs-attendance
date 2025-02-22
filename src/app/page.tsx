@@ -1,16 +1,16 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { 
-  Clock, 
-  Users, 
-  BarChart, 
+import {
+  BarChart,
   Bell,
   CheckCircle,
+  Clock,
   MapPin,
+  Users,
 } from "lucide-react";
+import { getServerSession } from "next-auth";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
@@ -44,8 +44,8 @@ export default async function HomePage() {
             Made Simple
           </h1>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-            Track attendance, manage departments, and generate reports with ease.
-            Perfect for businesses of all sizes.
+            Track attendance, manage departments, and generate reports with
+            ease. Perfect for businesses of all sizes.
           </p>
           <div className="flex justify-center gap-4">
             <Link href="/auth/signin">
@@ -95,8 +95,8 @@ export default async function HomePage() {
                 Why Choose MAVS Attendance?
               </h2>
               <p className="text-muted-foreground">
-                Our modern attendance system helps you manage your workforce more
-                effectively
+                Our modern attendance system helps you manage your workforce
+                more effectively
               </p>
             </div>
             <div className="grid gap-6">
@@ -105,7 +105,8 @@ export default async function HomePage() {
                 <div>
                   <h4 className="font-bold">Easy to Use</h4>
                   <p className="text-muted-foreground">
-                    Simple and intuitive interface for both employees and managers
+                    Simple and intuitive interface for both employees and
+                    managers
                   </p>
                 </div>
               </div>

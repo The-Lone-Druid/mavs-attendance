@@ -43,4 +43,4 @@ export async function POST(req: Request) {
     console.error("[RESET_PASSWORD_REQUEST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

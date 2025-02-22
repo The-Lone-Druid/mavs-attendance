@@ -1,10 +1,7 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { SidebarNav } from "@/components/layout/sidebar-nav";
-import { adminNavItems } from "@/config/nav";
 import MenuLayout from "@/components/layout/menu-layout";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,

@@ -40,7 +40,8 @@ export function CheckInOutButton({
         }
 
         if (validation.message) {
-          const toastType = validation.status === "VERY_LATE" ? "error" : "warning";
+          const toastType =
+            validation.status === "VERY_LATE" ? "error" : "warning";
           toast[toastType](validation.message);
         }
       }

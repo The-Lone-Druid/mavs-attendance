@@ -8,7 +8,9 @@ interface ResetPasswordPageProps {
   };
 }
 
-export default async function ResetPasswordPage({ params }: ResetPasswordPageProps) {
+export default async function ResetPasswordPage({
+  params,
+}: ResetPasswordPageProps) {
   const { token } = params;
 
   // Verify token
@@ -36,4 +38,4 @@ export default async function ResetPasswordPage({ params }: ResetPasswordPagePro
       </div>
     </div>
   );
-} 
+}

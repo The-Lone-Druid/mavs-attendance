@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 import { Department } from "@prisma/client";
+import { useState } from "react";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const departmentSchema = z.object({
@@ -49,6 +49,7 @@ export function CreateDepartmentForm({
       toast.success("Department created successfully");
       onSuccess(department);
     } catch (error) {
+      console.error(error);
       toast.error("Failed to create department");
     } finally {
       setLoading(false);

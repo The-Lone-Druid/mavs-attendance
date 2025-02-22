@@ -1,6 +1,6 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -28,6 +28,7 @@ export async function GET() {
 
     return NextResponse.json(activities);
   } catch (error) {
+    console.error(error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}

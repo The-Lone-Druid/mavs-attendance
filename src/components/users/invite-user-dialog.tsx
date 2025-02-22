@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { CreateDepartmentForm } from "@/components/departments/create-department-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -20,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -27,11 +26,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Roles } from "@prisma/client";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { CreateDepartmentForm } from "@/components/departments/create-department-form";
+import { z } from "zod";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -76,6 +76,7 @@ export function InviteUserDialog({ departments }: InviteUserDialogProps) {
       setOpen(false);
       form.reset();
     } catch (error) {
+      console.error(error);
       toast.error("Error", {
         description: "Failed to send invitation.",
       });

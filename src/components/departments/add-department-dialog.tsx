@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +17,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -48,6 +48,7 @@ export function AddDepartmentDialog() {
       setOpen(false);
       form.reset();
     } catch (error) {
+      console.error(error);
       toast.error("Failed to create department");
     }
   };
@@ -84,4 +85,4 @@ export function AddDepartmentDialog() {
       </DialogContent>
     </Dialog>
   );
-} 
+}
