@@ -1,21 +1,19 @@
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 
 interface ResetPasswordPageProps {
-  params: {
-    token: string;
-  };
+  params: Promise<{ token: string }>;
 }
 
 export default async function ResetPasswordPage({
   params,
 }: ResetPasswordPageProps) {
-  const { token } = params;
+  const resolvedParams = await params;
 
   // Verify token
   const resetRequest = await prisma.passwordReset.findUnique({
-    where: { token },
+    where: { token: resolvedParams.token },
     include: { user: true },
   });
 
@@ -34,7 +32,10 @@ export default async function ResetPasswordPage({
             Enter your new password below
           </p>
         </div>
-        <ResetPasswordForm token={token} email={resetRequest.user.email} />
+        <ResetPasswordForm
+          token={resolvedParams.token}
+          email={resetRequest.user.email}
+        />
       </div>
     </div>
   );

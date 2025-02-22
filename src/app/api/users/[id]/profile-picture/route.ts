@@ -1,17 +1,18 @@
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const resolvedParams = await params;
 
-    if (!session || session.user.id !== parseInt(params.id)) {
+    if (!session || session.user.id !== parseInt(resolvedParams.id)) {
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
@@ -30,7 +31,7 @@ export async function POST(
 
     // Update user profile picture
     const user = await prisma.user.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(resolvedParams.id) },
       data: { profilePicture: blob.url },
     });
 
